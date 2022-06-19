@@ -67,6 +67,7 @@ function animateBox() {
     box.style.top = `${getBox().top + yShift}px`;    
     
 
+    // recursively call the anmimated box, settimeout may not be a good option
     requestAnimationFrame(animateBox);
 
 }
