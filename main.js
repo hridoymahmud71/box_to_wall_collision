@@ -1,5 +1,7 @@
 // main js here
 
+var xCollision = false;
+var yCollision = false;
 
 //  shift in x and y
 var xShift = 10;
@@ -18,8 +20,8 @@ function setViewPort() {
 }
 
 var box = document.querySelector('.box');
-//var box = document.getElementById('box');
 
+// postion and width height of the box
 function getBox() {
 
     return {
@@ -36,13 +38,6 @@ window.addEventListener('resize', function (event) {
     setViewPort();
 });
 
-// check collison
-function checkCollision() {
-    return {
-        xCollision: getBox().left + getBox().width >= viewportWidth,
-        yCollision: getBox().top + getBox().height >= viewportHeight
-    }
-}
 
 
 // run the anumation
@@ -50,25 +45,26 @@ requestAnimationFrame(animateBox);
 
 function animateBox() {
 
-    console.log(getBox());
+    // if left + width of the box exceeds the viewport right while going right
+    // or if the left of the box touches the window left
+    xCollision = ( getBox().left + getBox().width >= viewportWidth) || (getBox().left  < 0);
 
-    if (getBox().left + getBox().width >= viewportWidth) {
-        box.style.right = `${getBox().left + xShift}px`;
+    // if top + width of the box exceeds the viewport bottom while going down
+    // or if the top of the box touches the window top
+    yCollision = (getBox().top + getBox().height >= viewportHeight) || (getBox().top  < 0);
+
+    // on collision change x direction
+    if(xCollision){
+        xShift = -1 * xShift;
     }
 
-    if (getBox().top + getBox().height >= viewportHeight) {
-        box.style.bottom = `${getBox().top + yShift}px`;
-    }
+    //  on colltion change y direction
+    if(yCollision){
+        yShift = -1 * yShift;
+    }   
 
-    if(getBox().left <= viewportWidth){
-        box.style.left = `${getBox().left + xShift}px`;
-    }
-
-    if(getBox().top <= viewportHeight){
-        box.style.top = `${getBox().top + yShift}px`;
-    }
-
-    
+    box.style.left = `${getBox().left + xShift}px`;
+    box.style.top = `${getBox().top + yShift}px`;    
     
 
     requestAnimationFrame(animateBox);
