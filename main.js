@@ -1,19 +1,12 @@
 // main js here
 
-// check if collision happened in any axis
-var xCollision = false;
-var yCollision = false;
-
-// initial box position
-var xPosition = 0;
-var yPosition = 50;
 
 //  shift in x and y
 var xShift = 10;
 var yShift = 10;
 
 var viewportWidth = 0;
-var viwportHeight = 0;
+var viewportHeight = 0;
 
 setViewPort();
 
@@ -21,15 +14,14 @@ setViewPort();
 
 function setViewPort() {
     viewportWidth = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-    viwportHeight = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-
-    console.log(viewportWidth, viwportHeight);
+    viewportHeight = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
 }
 
-
+var box = document.querySelector('.box');
+//var box = document.getElementById('box');
 
 function getBox() {
-    let box = document.querySelector('.box');
+
     return {
         top: window.scrollY + box.getBoundingClientRect().top,
         left: window.scrollX + box.getBoundingClientRect().left,
@@ -44,11 +36,41 @@ window.addEventListener('resize', function (event) {
     setViewPort();
 });
 
+// check collison
+function checkCollision() {
+    return {
+        xCollision: getBox().left + getBox().width >= viewportWidth,
+        yCollision: getBox().top + getBox().height >= viewportHeight
+    }
+}
+
+
 // run the anumation
 requestAnimationFrame(animateBox);
 
 function animateBox() {
 
-    console.log(getBox())
+    console.log(getBox());
+
+    if (getBox().left + getBox().width >= viewportWidth) {
+        box.style.right = `${getBox().left + xShift}px`;
+    }
+
+    if (getBox().top + getBox().height >= viewportHeight) {
+        box.style.bottom = `${getBox().top + yShift}px`;
+    }
+
+    if(getBox().left <= viewportWidth){
+        box.style.left = `${getBox().left + xShift}px`;
+    }
+
+    if(getBox().top <= viewportHeight){
+        box.style.top = `${getBox().top + yShift}px`;
+    }
+
+    
+    
+
+    requestAnimationFrame(animateBox);
 
 }
